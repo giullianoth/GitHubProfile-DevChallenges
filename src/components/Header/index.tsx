@@ -1,7 +1,8 @@
-import type { ChangeEvent, Dispatch, SetStateAction } from "react"
+import { useEffect, useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react"
 import styles from "./Header.module.css"
 import searchIcon from "/images/Search.svg"
 import { VscClose } from "react-icons/vsc"
+import APIServices from "../../api/api-services"
 
 type Props = {
     search: string
@@ -9,6 +10,24 @@ type Props = {
 }
 
 const Header = ({ search, setSearch }: Props) => {
+    const [results, setResults] = useState([])
+    const { loading, searchUsers } = APIServices()
+
+    useEffect(() => {
+        const getResults = async () => {
+            if (search) {
+                const data = await searchUsers(search)
+                setResults(data)
+            } else {
+                setResults([])
+            }
+        }
+
+        getResults()
+    }, [search])
+
+    console.log(results)
+
     const handleChangeSearch = (event: ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value)
     }
@@ -35,19 +54,31 @@ const Header = ({ search, setSearch }: Props) => {
                             <VscClose />
                         </span>}
 
-                    <div className={styles.header__results}>
-                        <div className={styles.header__result}>
-                            <img src="https://avatars.githubusercontent.com/u/9919?v=4" alt="GitHub" />
+                    {search &&
+                        (loading
+                            ? <>Loading...</>
 
-                            <div className={styles.header__resultInfo}>
-                                <p className={styles.header__resultName}>
-                                    <strong>GitHub</strong>
-                                </p>
+                            : (
+                                results.length > 0
+                                    ? results.map(result => (
+                                        <div key={result.id} className={styles.header__results}>
+                                            <div className={styles.header__result}>
+                                                <img src={result.avatar_url} alt="GitHub" />
 
-                                <p className={styles.header__resultBio}>How people build software.</p>
-                            </div>
-                        </div>
-                    </div>
+                                                <div className={styles.header__resultInfo}>
+                                                    <p className={styles.header__resultName}>
+                                                        <strong>GitHub</strong>
+                                                    </p>
+
+                                                    <p className={styles.header__resultBio}>How people build software.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+
+                                    : <>No results</>
+                            )
+                        )}
                 </form>
             </div>
         </header>
