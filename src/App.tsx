@@ -1,6 +1,7 @@
 import './App.css'
 import Header from './components/Header'
 import Profile from './components/Profile'
+import Repositories from './components/Repositories'
 
 const App = () => {
   return (
@@ -9,6 +10,7 @@ const App = () => {
 
       <main>
         <Profile />
+        <Repositories />
       </main>
     </>
   )

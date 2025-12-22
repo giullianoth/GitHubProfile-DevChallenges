@@ -1,0 +1,35 @@
+.repo {
+    background-image: var(--color-gradient);
+    padding: 20px;
+    border-radius: var(--radius);
+}
+
+.repo__name {
+    margin-bottom: 20px;
+}
+
+.repo__name h2 {
+    font-size: var(--font-size-title);
+}
+
+.repo__description {
+    color: var(--color-text-alt);
+    margin-bottom: 20px;
+}
+
+.repo__details {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: var(--color-text-alt);
+}
+
+.repo__detail {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.repo__updated-at {
+    font-size: var(--font-size-small);
+}
