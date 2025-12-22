@@ -1,0 +1,29 @@
+.header {
+    height: 240px;
+    background-image: url("/images/hero-image-github-profile-sm.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    padding-top: 30px;
+}
+
+.header__search {
+    max-width: 480px;
+    margin-inline: auto;
+    background-color: var(--color-primary);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+}
+
+.header__search input {
+    background-color: inherit;
+}
+
+@media screen and (min-width: 992px) {
+    .gh-header {
+        background-image: url("/images/hero-image-github-profile.jpg");
+    }
+}
