@@ -4,11 +4,11 @@
 
 :root {
   /* COLOR PALETTE */
-  --color-primary: #364153;
+  --color-primary: #20293A;
   --color-secondary: #111729;
   --color-tertiary: #20293A;
 
-  --color-background: #20293A;
+  --color-background: #364153;
   --color-background-alt: #1D1B48;
 
   --color-gradient: linear-gradient(90deg, var(--color-secondary), var(--color-background-alt));
@@ -44,7 +44,7 @@ body {
   font-size: var(--font-size-body);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, strong {
   font-weight: 500;
 }
 
