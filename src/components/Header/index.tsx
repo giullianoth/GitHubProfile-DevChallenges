@@ -3,6 +3,8 @@ import styles from "./Header.module.css"
 import searchIcon from "/images/Search.svg"
 import { VscClose } from "react-icons/vsc"
 import APIServices from "../../api/api-services"
+import type { GitHubUser } from "../../types/user"
+import Loading from "../Loading"
 
 type Props = {
     search: string
@@ -10,23 +12,21 @@ type Props = {
 }
 
 const Header = ({ search, setSearch }: Props) => {
-    const [results, setResults] = useState([])
-    const { loading, searchUsers } = APIServices()
+    const [results, setResults] = useState<GitHubUser[]>([])
+    const { loading, error, searchUsers } = APIServices()
 
     useEffect(() => {
-        const getResults = async () => {
+        const delayDebounceFn = setTimeout(async () => {
             if (search) {
                 const data = await searchUsers(search)
                 setResults(data)
             } else {
                 setResults([])
             }
-        }
+        }, 500)
 
-        getResults()
+        return () => clearTimeout(delayDebounceFn)
     }, [search])
-
-    console.log(results)
 
     const handleChangeSearch = (event: ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value)
@@ -55,30 +55,37 @@ const Header = ({ search, setSearch }: Props) => {
                         </span>}
 
                     {search &&
-                        (loading
-                            ? <>Loading...</>
+                        <div className={styles.header__results}>
+                            {loading
+                                ? <Loading
+                                    small
+                                    className={`${styles.header__result} ${styles.info}`} />
 
-                            : (
-                                results.length > 0
-                                    ? results.map(result => (
-                                        <div key={result.id} className={styles.header__results}>
-                                            <div className={styles.header__result}>
-                                                <img src={result.avatar_url} alt="GitHub" />
+                                : (error
+                                    ? <p className={`${styles.header__result} ${styles.info}`}>{error}</p>
+
+                                    : (results.length
+                                        ? results.map(result => (
+                                            <div key={result.id} className={styles.header__result}>
+                                                <img src={result.avatar_url} alt={result.name || result.login} />
 
                                                 <div className={styles.header__resultInfo}>
                                                     <p className={styles.header__resultName}>
-                                                        <strong>GitHub</strong>
+                                                        <strong>{result.name || result.login}</strong>
                                                     </p>
 
-                                                    <p className={styles.header__resultBio}>How people build software.</p>
+                                                    <p className={styles.header__resultBio}>
+                                                        {result.bio || <em>No bio available</em>}
+                                                    </p>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))
+                                        ))
 
-                                    : <>No results</>
-                            )
-                        )}
+                                        : <p className={`${styles.header__result} ${styles.info}`}>No results</p>)
+                                )
+                            }
+                        </div>
+                    }
                 </form>
             </div>
         </header>
