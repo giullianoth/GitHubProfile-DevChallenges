@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type Dispatch, type SetStateAction } from "react"
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
 import styles from "./Header.module.css"
 import searchIcon from "/images/Search.svg"
 import { VscClose } from "react-icons/vsc"
@@ -7,11 +7,11 @@ import type { GitHubUser } from "../../types/user"
 import Loading from "../Loading"
 
 type Props = {
-    search: string
-    setSearch: Dispatch<SetStateAction<string>>
+    onSelectUser: (value: string) => void
 }
 
-const Header = ({ search, setSearch }: Props) => {
+const Header = ({ onSelectUser }: Props) => {
+    const [search, setSearch] = useState<string>("")
     const [results, setResults] = useState<GitHubUser[]>([])
     const { loading, error, searchUsers } = APIServices()
 
@@ -32,10 +32,26 @@ const Header = ({ search, setSearch }: Props) => {
         setSearch(event.target.value)
     }
 
+    const handleSelectOnSubmit = (event: FormEvent) => {
+        event.preventDefault()
+
+        if (results.length) {
+            onSelectUser(results[0].login)
+            setResults([])
+            setSearch("")
+        }
+    }
+
+    const handleSelectOnClick = (userName: string) => {
+        onSelectUser(userName)
+        setResults([])
+        setSearch("")
+    }
+
     return (
         <header className={styles.header}>
             <div className="container">
-                <form className={styles.header__search}>
+                <form className={styles.header__search} onSubmit={handleSelectOnSubmit}>
                     <img src={searchIcon} alt="" className="image-as-icon" />
 
                     <input
@@ -47,45 +63,49 @@ const Header = ({ search, setSearch }: Props) => {
                         onChange={handleChangeSearch} />
 
                     {search &&
-                        <span
-                            className={styles.header__searchClose}
-                            title="Clear"
-                            onClick={() => setSearch("")}>
-                            <VscClose />
-                        </span>}
+                        <>
+                            <span
+                                className={styles.header__searchClose}
+                                title="Clear"
+                                onClick={() => setSearch("")}>
+                                <VscClose />
+                            </span>
 
-                    {search &&
-                        <div className={styles.header__results}>
-                            {loading
-                                ? <Loading
-                                    small
-                                    className={`${styles.header__result} ${styles.info}`} />
+                            <div className={styles.header__results}>
+                                {loading
+                                    ? <Loading
+                                        small
+                                        className={`${styles.header__result} ${styles.info}`} />
 
-                                : (error
-                                    ? <p className={`${styles.header__result} ${styles.info}`}>{error}</p>
+                                    : (error
+                                        ? <p className={`${styles.header__result} ${styles.info}`}>{error}</p>
 
-                                    : (results.length
-                                        ? results.map(result => (
-                                            <div key={result.id} className={styles.header__result}>
-                                                <img src={result.avatar_url} alt={result.name || result.login} />
+                                        : (results.length
+                                            ? results.map(result => (
+                                                <div
+                                                    key={result.id}
+                                                    className={styles.header__result}
+                                                    onClick={() => handleSelectOnClick(result.login)}>
+                                                    <img src={result.avatar_url} alt={result.name || result.login} />
 
-                                                <div className={styles.header__resultInfo}>
-                                                    <p className={styles.header__resultName}>
-                                                        <strong>{result.name || result.login}</strong>
-                                                    </p>
+                                                    <div className={styles.header__resultInfo}>
+                                                        <p className={styles.header__resultName}>
+                                                            <strong>{result.name || result.login}</strong>
+                                                        </p>
 
-                                                    {result.bio &&
-                                                        <p className={styles.header__resultBio}>
-                                                            {result.bio}
-                                                        </p>}
+                                                        {result.bio &&
+                                                            <p className={styles.header__resultBio}>
+                                                                {result.bio}
+                                                            </p>}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))
+                                            ))
 
-                                        : <p className={`${styles.header__result} ${styles.info}`}>No results</p>)
-                                )
-                            }
-                        </div>
+                                            : <p className={`${styles.header__result} ${styles.info}`}>No results</p>)
+                                    )
+                                }
+                            </div>
+                        </>
                     }
                 </form>
             </div>

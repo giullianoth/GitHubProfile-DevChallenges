@@ -4,9 +4,11 @@ import type { GitHubUser } from "../../types/user"
 import APIServices from "../../api/api-services"
 import Loading from "../Loading"
 
-type Props = {}
+type Props = {
+    userName: string
+}
 
-const Profile = ({ }: Props) => {
+const Profile = ({ userName }: Props) => {
     const [currentUser, setCurrentUser] = useState<GitHubUser | null>(null)
     const { loading, error, getUser } = APIServices()
 
@@ -18,6 +20,17 @@ const Profile = ({ }: Props) => {
 
         fetchInitialUser()
     }, [])
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (userName) {
+                const data = await getUser(userName)
+                setCurrentUser(data)
+            }
+        }
+
+        fetchUser()
+    }, [userName])
 
     return (
         loading

@@ -6,14 +6,18 @@ import Profile from './components/Profile'
 import Repositories from './components/Repositories'
 
 const App = () => {
-  const [search, setSearch] = useState<string>("")
+  const [userName, setUserName] = useState<string>("")
+
+  const handleSelectUser = (value: string) => {
+    setUserName(value)
+  }
 
   return (
     <>
-      <Header search={search} setSearch={setSearch} />
+      <Header onSelectUser={handleSelectUser} />
 
       <main>
-        <Profile />
+        <Profile userName={userName} />
         <Repositories />
       </main>
 
