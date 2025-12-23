@@ -74,9 +74,10 @@ const Header = ({ search, setSearch }: Props) => {
                                                         <strong>{result.name || result.login}</strong>
                                                     </p>
 
-                                                    <p className={styles.header__resultBio}>
-                                                        {result.bio || <em>No bio available</em>}
-                                                    </p>
+                                                    {result.bio &&
+                                                        <p className={styles.header__resultBio}>
+                                                            {result.bio}
+                                                        </p>}
                                                 </div>
                                             </div>
                                         ))
