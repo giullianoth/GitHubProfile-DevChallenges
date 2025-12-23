@@ -45,7 +45,9 @@ const Profile = ({ userName }: Props) => {
                         <div className={styles.profile__details}>
                             <div className={styles.profile__photo}>
                                 {currentUser.avatar_url &&
-                                    <img src={currentUser.avatar_url} alt={currentUser.name || currentUser.bio} />}
+                                    <a href={currentUser.html_url} target="_blank" rel="noopener noreferrer">
+                                        <img src={currentUser.avatar_url} alt={currentUser.name || currentUser.bio} />
+                                    </a>}
                             </div>
 
                             <div className={styles.profile__stats}>
@@ -69,11 +71,19 @@ const Profile = ({ userName }: Props) => {
 
                         <div className={styles.profile__user}>
                             <header className={styles.profile__userName}>
-                                <h1>{currentUser.name || currentUser.bio}</h1>
+                                <h1>
+                                    <a href={currentUser.html_url} target="_blank" rel="noopener noreferrer">
+                                        {currentUser.name || currentUser.bio}
+                                    </a>
+                                </h1>
                             </header>
 
                             {currentUser.bio &&
-                                <p className={styles.profile__userBio}>{currentUser.bio}</p>}
+                                <p className={styles.profile__userBio}>
+                                    <a href={currentUser.html_url} target="_blank" rel="noopener noreferrer">
+                                        {currentUser.bio}
+                                    </a>
+                                </p>}
                         </div>
                     </div>
                 </section>

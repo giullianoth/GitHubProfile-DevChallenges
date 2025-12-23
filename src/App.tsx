@@ -18,7 +18,7 @@ const App = () => {
 
       <main>
         <Profile userName={userName} />
-        <Repositories />
+        <Repositories userName={userName} />
       </main>
 
       <Footer />

@@ -26,7 +26,7 @@ const Header = ({ onSelectUser }: Props) => {
         }, 500)
 
         return () => clearTimeout(delayDebounceFn)
-    }, [search])
+    }, [search, searchUsers])
 
     const handleChangeSearch = (event: ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value)

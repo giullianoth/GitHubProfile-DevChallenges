@@ -2,10 +2,9 @@
     background-image: var(--color-gradient);
     padding: 20px;
     border-radius: var(--radius);
-}
-
-.repo__name {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
 }
 
 .repo__name h2 {
@@ -14,7 +13,7 @@
 
 .repo__description {
     color: var(--color-text-alt);
-    margin-bottom: 20px;
+    flex-grow: 1;
 }
 
 .repo__details {
@@ -30,6 +29,6 @@
     gap: 5px;
 }
 
-.repo__updated-at {
+.repo__updatedAt {
     font-size: var(--font-size-small);
 }

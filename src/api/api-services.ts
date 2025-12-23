@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react"
 import type { GitHubUser } from "../types/user"
+import type { GitHubRepository } from "../types/repository"
 
 const API_URL = "https://api.github.com"
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
@@ -7,48 +8,6 @@ const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
 const APIServices = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
-
-    const getUser = useCallback(async (userName: string) => {
-        setError(null)
-
-        if (!userName) {
-            return null
-        }
-
-        setLoading(true)
-
-        try {
-            const response = await fetch(`${API_URL}/users/${userName}`, {
-                headers: {
-                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                    "Accept": "application/vnd.github+json"
-                }
-            })
-
-            if (response.status === 404) {
-                setError("User not found")
-                return null
-            }
-
-            if (response.status === 403) {
-                setError("Search limit reached. Please try again in a few minutes.")
-                return null
-            }
-
-            if (!response.ok) {
-                throw new Error("Error on search")
-            }
-
-            const data = await response.json()
-            return data as GitHubUser
-        } catch (error) {
-            console.error(error)
-            setError("Error during fetch user")
-            return null
-        } finally {
-            setLoading(false)
-        }
-    }, [])
 
     const searchUsers = useCallback(async (search: string) => {
         setError(null)
@@ -112,11 +71,96 @@ const APIServices = () => {
         }
     }, [])
 
+    const getUser = useCallback(async (userName: string) => {
+        setError(null)
+
+        if (!userName) {
+            return null
+        }
+
+        setLoading(true)
+
+        try {
+            const response = await fetch(`${API_URL}/users/${userName}`, {
+                headers: {
+                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                    "Accept": "application/vnd.github+json"
+                }
+            })
+
+            if (response.status === 404) {
+                setError("User not found")
+                return null
+            }
+
+            if (response.status === 403) {
+                setError("Search limit reached. Please try again in a few minutes.")
+                return null
+            }
+
+            if (!response.ok) {
+                throw new Error("Error on search")
+            }
+
+            const data = await response.json()
+            return data as GitHubUser
+        } catch (error) {
+            console.error(error)
+            setError("Error during fetch user")
+            return null
+        } finally {
+            setLoading(false)
+        }
+    }, [])
+
+    const getReposByUser = useCallback(async (userName: string) => {
+        setError(null)
+
+        if (!userName) {
+            return []
+        }
+
+        setLoading(true)
+
+        try {
+            const response = await fetch(`${API_URL}/users/${userName}/repos`, {
+                headers: {
+                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                    "Accept": "application/vnd.github+json"
+                }
+            })
+
+            if (response.status === 404) {
+                setError("Repositories not found")
+                return []
+            }
+
+            if (response.status === 403) {
+                setError("Search limit reached. Please try again in a few minutes.")
+                return []
+            }
+
+            if (!response.ok) {
+                throw new Error("Error on search")
+            }
+
+            const data = await response.json()
+            return data as GitHubRepository[]
+        } catch (error) {
+            console.error("Unexpected error during fetch repositories:", error)
+            setError("Error on search")
+            return []
+        } finally {
+            setLoading(false)
+        }
+    }, [])
+
     return {
         loading,
         error,
+        searchUsers,
         getUser,
-        searchUsers
+        getReposByUser
     }
 }
 
