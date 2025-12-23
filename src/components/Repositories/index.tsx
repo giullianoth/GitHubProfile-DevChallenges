@@ -56,7 +56,7 @@ const Repositories = ({ userName }: Props) => {
                                     ))}
                                 </div>
 
-                                {!viewAll &&
+                                {!viewAll && repositories.length > 4 &&
                                     <p className={styles.repos__view}>
                                         <button
                                             className="button clear"
