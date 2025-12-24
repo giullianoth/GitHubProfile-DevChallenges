@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react"
+import { useEffect, useState, type FormEvent } from "react"
 import styles from "./Header.module.css"
 import searchIcon from "/images/Search.svg"
 import { VscClose } from "react-icons/vsc"
@@ -8,43 +8,40 @@ import Loading from "../Loading"
 
 type Props = {
     onSelectUser: (value: string) => void
+    debounceTimeout: number
 }
 
-const Header = ({ onSelectUser }: Props) => {
+const Header = ({ onSelectUser, debounceTimeout }: Props) => {
     const [search, setSearch] = useState<string>("")
-    const [results, setResults] = useState<GitHubUser[]>([])
+    const [users, setUsers] = useState<GitHubUser[]>([])
     const { loading, error, searchUsers } = APIServices()
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(async () => {
             if (search) {
                 const data = await searchUsers(search)
-                setResults(data)
+                setUsers(data)
             } else {
-                setResults([])
+                setUsers([])
             }
-        }, 500)
+        }, debounceTimeout)
 
         return () => clearTimeout(delayDebounceFn)
     }, [search, searchUsers])
 
-    const handleChangeSearch = (event: ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.target.value)
-    }
-
     const handleSelectOnSubmit = (event: FormEvent) => {
         event.preventDefault()
 
-        if (results.length) {
-            onSelectUser(results[0].login)
-            setResults([])
+        if (users.length) {
+            onSelectUser(users[0].login)
+            setUsers([])
             setSearch("")
         }
     }
 
     const handleSelectOnClick = (userName: string) => {
         onSelectUser(userName)
-        setResults([])
+        setUsers([])
         setSearch("")
     }
 
@@ -60,7 +57,7 @@ const Header = ({ onSelectUser }: Props) => {
                         name="search"
                         placeholder="username"
                         value={search}
-                        onChange={handleChangeSearch} />
+                        onChange={event => setSearch(event.target.value)} />
 
                     {search &&
                         <>
@@ -80,22 +77,22 @@ const Header = ({ onSelectUser }: Props) => {
                                     : (error
                                         ? <p className={`${styles.header__result} ${styles.info}`}>{error}</p>
 
-                                        : (results.length
-                                            ? results.map(result => (
+                                        : (users.length
+                                            ? users.map(user => (
                                                 <div
-                                                    key={result.id}
+                                                    key={user.id}
                                                     className={styles.header__result}
-                                                    onClick={() => handleSelectOnClick(result.login)}>
-                                                    <img src={result.avatar_url} alt={result.name || result.login} />
+                                                    onClick={() => handleSelectOnClick(user.login)}>
+                                                    <img src={user.avatar_url} alt={user.name || user.login} />
 
                                                     <div className={styles.header__resultInfo}>
                                                         <p className={styles.header__resultName}>
-                                                            <strong>{result.name || result.login}</strong>
+                                                            <strong>{user.name || user.login}</strong>
                                                         </p>
 
-                                                        {result.bio &&
+                                                        {user.bio &&
                                                             <p className={styles.header__resultBio}>
-                                                                {result.bio}
+                                                                {user.bio}
                                                             </p>}
                                                     </div>
                                                 </div>

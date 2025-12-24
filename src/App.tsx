@@ -5,6 +5,8 @@ import Header from './components/Header'
 import Profile from './components/Profile'
 import Repositories from './components/Repositories'
 
+const DEBOUNCE_TIMEOUT = 500
+
 const App = () => {
   const [userName, setUserName] = useState<string>("")
 
@@ -14,11 +16,16 @@ const App = () => {
 
   return (
     <>
-      <Header onSelectUser={handleSelectUser} />
+      <Header
+        onSelectUser={handleSelectUser}
+        debounceTimeout={DEBOUNCE_TIMEOUT} />
 
       <main>
         <Profile userName={userName} />
-        <Repositories userName={userName} />
+
+        <Repositories
+          userName={userName}
+          debounceTimeout={DEBOUNCE_TIMEOUT} />
       </main>
 
       <Footer />

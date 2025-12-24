@@ -5,17 +5,19 @@ import type { GitHubRepository } from "../../types/repository"
 import APIServices from "../../api/api-services"
 import Loading from "../Loading"
 
+const MAX_REPOS_TO_SHOW = 4
+
 type Props = {
     userName: string
+    debounceTimeout: number
 }
 
-const Repositories = ({ userName }: Props) => {
+const Repositories = ({ userName, debounceTimeout }: Props) => {
     const [repositories, setRepositories] = useState<GitHubRepository[]>([])
     const [viewAll, setViewAll] = useState<boolean>(false)
     const { loading, error, getReposByUser } = APIServices()
 
-    const filteredRepos = repositories.filter((_, index) =>
-        viewAll || !viewAll && index < 4)
+    const filteredRepos = repositories.filter((_, index) => viewAll || !viewAll && index < MAX_REPOS_TO_SHOW)
 
     useEffect(() => {
         const fetchInitialRepos = async () => {
@@ -33,7 +35,7 @@ const Repositories = ({ userName }: Props) => {
                 const data = await getReposByUser(userName)
                 setRepositories(data)
             }
-        }, 500)
+        }, debounceTimeout)
 
         return () => clearTimeout(delayDebounceFn)
     }, [userName, getReposByUser])
@@ -56,7 +58,7 @@ const Repositories = ({ userName }: Props) => {
                                     ))}
                                 </div>
 
-                                {!viewAll && repositories.length > 4 &&
+                                {!viewAll && repositories.length > MAX_REPOS_TO_SHOW &&
                                     <p className={styles.repos__view}>
                                         <button
                                             className="button clear"

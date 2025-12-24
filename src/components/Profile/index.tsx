@@ -37,7 +37,7 @@ const Profile = ({ userName }: Props) => {
             ? <Loading className={styles.profile__info} />
 
             : (error
-                ? <p className={styles.profile__info}>{error}</p>
+                ? <p className={`container ${styles.profile__info}`}>{error}</p>
 
                 : currentUser &&
                 <section className={styles.profile}>
