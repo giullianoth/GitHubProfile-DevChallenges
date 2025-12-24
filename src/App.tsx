@@ -18,7 +18,7 @@ const App = () => {
         const isValid = await validateToken()
         
         if (!isValid && GITHUB_TOKEN) {
-            console.warn("Warning: Your GITHUB_TOKEN is invalid. The app will function with reduced limits.")
+            console.warn("Warning: Your GITHUB_TOKEN is invalid. The app will work with reduced limits.")
         }
     };
 
