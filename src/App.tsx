@@ -11,14 +11,14 @@ const INITIAL_USER = "github"
 
 const App = () => {
   const [userName, setUserName] = useState<string>("")
-  const { GITHUB_TOKEN, validateToken } = APIServices()
+  const { token, validateToken } = APIServices()
   
   useEffect(() => {
     const checkAuth = async () => {
         const isValid = await validateToken()
         
-        if (!isValid && GITHUB_TOKEN) {
-            console.warn("Warning: Your GITHUB_TOKEN is invalid. The app will work with reduced limits.")
+        if (!isValid && token) {
+            console.warn("Warning: Your GitHub token is invalid. The app will work with reduced limits.")
         }
     };
 

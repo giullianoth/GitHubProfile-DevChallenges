@@ -170,7 +170,7 @@ const APIServices = () => {
     }, [])
 
     return {
-        GITHUB_TOKEN,
+        token: GITHUB_TOKEN,
         validateToken,
         loading,
         error,
