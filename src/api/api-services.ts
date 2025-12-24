@@ -171,9 +171,9 @@ const APIServices = () => {
 
     return {
         token: GITHUB_TOKEN,
-        validateToken,
         loading,
         error,
+        validateToken,
         searchUsers,
         getUser,
         getReposByUser
