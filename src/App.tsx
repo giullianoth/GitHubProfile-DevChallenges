@@ -6,6 +6,7 @@ import Profile from './components/Profile'
 import Repositories from './components/Repositories'
 
 const DEBOUNCE_TIMEOUT = 500
+const INITIAL_USER = "github"
 
 const App = () => {
   const [userName, setUserName] = useState<string>("")
@@ -21,11 +22,14 @@ const App = () => {
         debounceTimeout={DEBOUNCE_TIMEOUT} />
 
       <main>
-        <Profile userName={userName} />
+        <Profile
+          userName={userName}
+          initialUser={INITIAL_USER} />
 
         <Repositories
           userName={userName}
-          debounceTimeout={DEBOUNCE_TIMEOUT} />
+          debounceTimeout={DEBOUNCE_TIMEOUT}
+          initialUser={INITIAL_USER} />
       </main>
 
       <Footer />

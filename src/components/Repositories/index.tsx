@@ -10,9 +10,10 @@ const MAX_REPOS_TO_SHOW = 4
 type Props = {
     userName: string
     debounceTimeout: number
+    initialUser: string
 }
 
-const Repositories = ({ userName, debounceTimeout }: Props) => {
+const Repositories = ({ userName, debounceTimeout, initialUser }: Props) => {
     const [repositories, setRepositories] = useState<GitHubRepository[]>([])
     const [viewAll, setViewAll] = useState<boolean>(false)
     const { loading, error, getReposByUser } = APIServices()
@@ -21,7 +22,7 @@ const Repositories = ({ userName, debounceTimeout }: Props) => {
 
     useEffect(() => {
         const fetchInitialRepos = async () => {
-            const data = await getReposByUser("github")
+            const data = await getReposByUser(initialUser)
             setRepositories(data)
         }
 

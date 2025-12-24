@@ -6,15 +6,16 @@ import Loading from "../Loading"
 
 type Props = {
     userName: string
+    initialUser: string
 }
 
-const Profile = ({ userName }: Props) => {
+const Profile = ({ userName, initialUser }: Props) => {
     const [currentUser, setCurrentUser] = useState<GitHubUser | null>(null)
     const { loading, error, getUser } = APIServices()
 
     useEffect(() => {
         const fetchInitialUser = async () => {
-            const data = await getUser("github")
+            const data = await getUser(initialUser)
             setCurrentUser(data)
         }
 
