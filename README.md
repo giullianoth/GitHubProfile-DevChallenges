@@ -110,6 +110,7 @@ npm run dev
 
 3. **Lógica de Tempo Relativo:** Desenvolvi uma função personalizada para calcular a diferença entre datas e exibir formatos humanos (segundos, minutos, horas ou dias), evitando dependências externas pesadas.
 
+
 1. *__Smart API Consumption:__ I learned how to handle the asynchronous ```fetch``` behavior by combining list fetches with individual detail fetches using ```Promise.all``` to improve perceived speed.*
 
 2. *__Rate Limit Management:__ I implemented an HTTP 403 error handling system to inform the user when the GitHub request limit expires, ensuring that the app doesn't "break" silently.*
