@@ -30,16 +30,24 @@ const Repositories = ({ userName, debounceTimeout, initialUser }: Props) => {
     }, [])
 
     useEffect(() => {
+        let isMounted = true
+
         const delayDebounceFn = setTimeout(async () => {
             if (userName) {
                 setViewAll(false)
                 const data = await getReposByUser(userName)
-                setRepositories(data)
+                
+                if (isMounted) {
+                    setRepositories(data)
+                }
             }
         }, debounceTimeout)
 
-        return () => clearTimeout(delayDebounceFn)
-    }, [userName, getReposByUser])
+        return () => {
+            isMounted = false
+            clearTimeout(delayDebounceFn)
+        }
+    }, [userName, getReposByUser, debounceTimeout])
 
     return (
         <section className={styles.repos}>
@@ -64,8 +72,8 @@ const Repositories = ({ userName, debounceTimeout, initialUser }: Props) => {
                                         <button
                                             className="button clear"
                                             onClick={() => setViewAll(true)}>
-                                                <strong>View all repositories</strong>
-                                            </button>
+                                            <strong>View all repositories</strong>
+                                        </button>
                                     </p>}
                             </>
 
