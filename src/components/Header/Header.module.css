@@ -35,6 +35,7 @@
     width: 100%;
     background-color: var(--color-secondary);
     border-radius: var(--radius);
+    overflow: hidden;
 }
 
 .header__result {
