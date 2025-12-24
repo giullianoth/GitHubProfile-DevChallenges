@@ -19,7 +19,8 @@
 .repo__details {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px 20px;
+    flex-wrap: wrap;
     color: var(--color-text-alt);
 }
 
