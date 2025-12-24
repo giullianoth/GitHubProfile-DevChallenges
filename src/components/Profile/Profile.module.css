@@ -47,7 +47,12 @@
 }
 
 .profile__statusCard span:first-child {
-    border-right: 1px solid var(--color-tertiary);
+    border-right: 1px solid var(--color-background);
+    padding-right: 20px;
+}
+
+.profile__statusCard span:last-child {
+    padding-left: 20px;
 }
 
 .profile__userName {

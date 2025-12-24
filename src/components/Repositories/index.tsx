@@ -63,7 +63,9 @@ const Repositories = ({ userName, debounceTimeout, initialUser }: Props) => {
                                     <p className={styles.repos__view}>
                                         <button
                                             className="button clear"
-                                            onClick={() => setViewAll(true)}>View all repositories</button>
+                                            onClick={() => setViewAll(true)}>
+                                                <strong>View all repositories</strong>
+                                            </button>
                                     </p>}
                             </>
 
