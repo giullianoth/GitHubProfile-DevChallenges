@@ -5,6 +5,15 @@ import type { GitHubRepository } from "../types/repository"
 const API_URL = "https://api.github.com"
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
 
+const AUTHENTICATION_CONFIG = GITHUB_TOKEN
+    ? {
+        headers: {
+            "Authorization": `Bearer ${GITHUB_TOKEN}`,
+            "Accept": "application/vnd.github+json"
+        }
+    }
+    : {}
+
 const APIServices = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
@@ -21,12 +30,7 @@ const APIServices = () => {
         try {
             const url = `${API_URL}/search/users?q=${encodeURIComponent(search)}&per_page=5`
 
-            const searchResponse = await fetch(url, {
-                headers: {
-                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                    "Accept": "application/vnd.github+json"
-                }
-            })
+            const searchResponse = await fetch(url, AUTHENTICATION_CONFIG)
 
             if (searchResponse.status === 403) {
                 setError("Search limit reached. Please try again in a few minutes.")
@@ -41,12 +45,7 @@ const APIServices = () => {
             const basicUsers = searchData.items ?? []
 
             const detailedUsersPromises = basicUsers.map(async (user: any) => {
-                const userResponse = await fetch(`${API_URL}/users/${user.login}`, {
-                    headers: {
-                        "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                        "Accept": "application/vnd.github+json"
-                    }
-                })
+                const userResponse = await fetch(`${API_URL}/users/${user.login}`, AUTHENTICATION_CONFIG)
 
                 if (userResponse.status === 403) {
                     setError("Search limit reached. Please try again in a few minutes.")
@@ -81,12 +80,7 @@ const APIServices = () => {
         setLoading(true)
 
         try {
-            const response = await fetch(`${API_URL}/users/${userName}`, {
-                headers: {
-                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                    "Accept": "application/vnd.github+json"
-                }
-            })
+            const response = await fetch(`${API_URL}/users/${userName}`, AUTHENTICATION_CONFIG)
 
             if (response.status === 404) {
                 setError("User not found")
@@ -123,12 +117,7 @@ const APIServices = () => {
         setLoading(true)
 
         try {
-            const response = await fetch(`${API_URL}/users/${userName}/repos`, {
-                headers: {
-                    "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                    "Accept": "application/vnd.github+json"
-                }
-            })
+            const response = await fetch(`${API_URL}/users/${userName}/repos`, AUTHENTICATION_CONFIG)
 
             if (response.status === 404) {
                 setError("Repositories not found")
