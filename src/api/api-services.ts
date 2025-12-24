@@ -18,6 +18,31 @@ const APIServices = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
 
+    const validateToken = useCallback(async (): Promise<boolean> => {
+        if (!GITHUB_TOKEN) {
+            return false
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/user`, AUTHENTICATION_CONFIG)
+
+            if (response.status === 200) {
+                console.log("GitHub Token: Valid (5000 request limit enabled)")
+                return true
+            }
+
+            if (response.status === 401) {
+                console.error("GitHub Token: Invalid ou expired.")
+                return false
+            }
+
+            return false
+        } catch (error) {
+            console.error("Error on validate token:", error)
+            return false
+        }
+    }, [])
+
     const searchUsers = useCallback(async (search: string) => {
         setError(null)
 
@@ -145,6 +170,8 @@ const APIServices = () => {
     }, [])
 
     return {
+        GITHUB_TOKEN,
+        validateToken,
         loading,
         error,
         searchUsers,
