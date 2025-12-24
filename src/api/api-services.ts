@@ -5,7 +5,7 @@ import type { GitHubRepository } from "../types/repository"
 const API_URL = "https://api.github.com"
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
 
-const AUTHENTICATION_CONFIG = GITHUB_TOKEN
+const AUTHENTICATION_CONFIG: RequestInit = GITHUB_TOKEN
     ? {
         headers: {
             "Authorization": `Bearer ${GITHUB_TOKEN}`,
