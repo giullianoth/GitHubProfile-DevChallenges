@@ -35,6 +35,12 @@
     width: 100%;
     background-color: var(--color-secondary);
     border-radius: var(--radius);
+    max-height: 460px;
+    overflow-y: auto;
+}
+
+.header__results::-webkit-scrollbar {
+    display: none;
 }
 
 .header__result {

@@ -27,7 +27,7 @@ const Header = ({ onSelectUser, debounceTimeout }: Props) => {
         }, debounceTimeout)
 
         return () => clearTimeout(delayDebounceFn)
-    }, [search, searchUsers])
+    }, [search, searchUsers, debounceTimeout])
 
     const handleSelectOnSubmit = (event: FormEvent) => {
         event.preventDefault()

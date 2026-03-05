@@ -27,7 +27,7 @@ const Repositories = ({ userName, debounceTimeout, initialUser }: Props) => {
         }
 
         fetchInitialRepos()
-    }, [])
+    }, [getReposByUser, initialUser])
 
     useEffect(() => {
         let isMounted = true

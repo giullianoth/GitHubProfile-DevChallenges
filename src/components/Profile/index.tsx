@@ -20,7 +20,7 @@ const Profile = ({ userName, initialUser }: Props) => {
         }
 
         fetchInitialUser()
-    }, [])
+    }, [getUser, initialUser])
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -31,7 +31,7 @@ const Profile = ({ userName, initialUser }: Props) => {
         }
 
         fetchUser()
-    }, [userName])
+    }, [userName, getUser])
 
     return (
         loading

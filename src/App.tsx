@@ -23,7 +23,7 @@ const App = () => {
     };
 
     checkAuth()
-}, [validateToken])
+}, [validateToken, token])
 
   const handleSelectUser = (value: string) => {
     setUserName(value)

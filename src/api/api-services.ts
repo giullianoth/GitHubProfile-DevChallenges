@@ -3,7 +3,7 @@ import type { GitHubUser } from "../types/user"
 import type { GitHubRepository } from "../types/repository"
 
 const API_URL = "https://api.github.com"
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
+const GITHUB_TOKEN = (import.meta.env.VITE_GITHUB_TOKEN).trim()
 
 const AUTHENTICATION_CONFIG: RequestInit = GITHUB_TOKEN
     ? {
@@ -53,7 +53,8 @@ const APIServices = () => {
         setLoading(true)
 
         try {
-            const url = `${API_URL}/search/users?q=${encodeURIComponent(search)}&per_page=5`
+            // const url = `${API_URL}/search/users?q=${encodeURIComponent(search)}&per_page=5`
+            const url = `${API_URL}/search/users?q=${encodeURIComponent(search)}`
 
             const searchResponse = await fetch(url, AUTHENTICATION_CONFIG)
 
@@ -69,6 +70,7 @@ const APIServices = () => {
             const searchData = await searchResponse.json()
             const basicUsers = searchData.items ?? []
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const detailedUsersPromises = basicUsers.map(async (user: any) => {
                 const userResponse = await fetch(`${API_URL}/users/${user.login}`, AUTHENTICATION_CONFIG)
 
