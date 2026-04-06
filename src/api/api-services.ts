@@ -5,14 +5,27 @@ import type { GitHubRepository } from "../types/repository"
 const API_URL = "https://api.github.com"
 const GITHUB_TOKEN = (import.meta.env.VITE_GITHUB_TOKEN).trim()
 
-const AUTHENTICATION_CONFIG: RequestInit = GITHUB_TOKEN
-    ? {
-        headers: {
-            "Authorization": `Bearer ${GITHUB_TOKEN}`,
-            "Accept": "application/vnd.github+json"
+const getAuthenticationConfig = (useToken: boolean): RequestInit => {
+    return useToken && GITHUB_TOKEN
+        ? {
+            headers: {
+                "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                "Accept": "application/vnd.github+json"
+            }
         }
+        : {}
+}
+
+const fetchWithFallback = async (url: string) => {
+    let response = await fetch(url, getAuthenticationConfig(true))
+
+    if (response.status === 401) {
+        console.warn("Invalid or expired token. Trying a public refetch...")
+        response = await fetch(url, getAuthenticationConfig(false))
     }
-    : {}
+
+    return response
+}
 
 const APIServices = () => {
     const [loading, setLoading] = useState<boolean>(false)
@@ -24,7 +37,7 @@ const APIServices = () => {
         }
 
         try {
-            const response = await fetch(`${API_URL}/user`, AUTHENTICATION_CONFIG)
+            const response = await fetch(`${API_URL}/user`, getAuthenticationConfig(true))
 
             if (response.status === 200) {
                 console.log("GitHub Token: Valid (5000 request limit enabled)")
@@ -56,7 +69,7 @@ const APIServices = () => {
             // const url = `${API_URL}/search/users?q=${encodeURIComponent(search)}&per_page=5`
             const url = `${API_URL}/search/users?q=${encodeURIComponent(search)}`
 
-            const searchResponse = await fetch(url, AUTHENTICATION_CONFIG)
+            const searchResponse = await fetchWithFallback(url)
 
             if (searchResponse.status === 403) {
                 setError("Search limit reached. Please try again in a few minutes.")
@@ -72,7 +85,7 @@ const APIServices = () => {
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const detailedUsersPromises = basicUsers.map(async (user: any) => {
-                const userResponse = await fetch(`${API_URL}/users/${user.login}`, AUTHENTICATION_CONFIG)
+                const userResponse = await fetchWithFallback(`${API_URL}/users/${user.login}`)
 
                 if (userResponse.status === 403) {
                     setError("Search limit reached. Please try again in a few minutes.")
@@ -107,7 +120,7 @@ const APIServices = () => {
         setLoading(true)
 
         try {
-            const response = await fetch(`${API_URL}/users/${userName}`, AUTHENTICATION_CONFIG)
+            const response = await fetchWithFallback(`${API_URL}/users/${userName}`)
 
             if (response.status === 404) {
                 setError("User not found")
@@ -144,7 +157,7 @@ const APIServices = () => {
         setLoading(true)
 
         try {
-            const response = await fetch(`${API_URL}/users/${userName}/repos`, AUTHENTICATION_CONFIG)
+            const response = await fetchWithFallback(`${API_URL}/users/${userName}/repos`)
 
             if (response.status === 404) {
                 setError("Repositories not found")
